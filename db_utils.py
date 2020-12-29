@@ -78,3 +78,18 @@ def update_item(key, status):
     except Exception as e:
         print(e)
         return None
+
+def delete_item(key):
+    try:
+
+        conn = db_connect()
+        c = conn.cursor()
+
+        c.execute("delete from items where id='{0}'".format(key))
+
+        conn.commit()
+
+        return {'key' : key}
+    except Exception as e:
+        print(e)
+        return None

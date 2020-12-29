@@ -68,3 +68,15 @@ def update_status():
         return Response("{'error': Item not Updated}", status=304, mimetype= 'application/json')
     
     return jsonify(response)
+
+@app.route('/item/delete', methods=['DELETE'])
+def delete_item():
+    data = request.get_json()
+    item = data['key']
+
+    response = db_utils.delete_item(item)
+
+    if response is None:
+        return Response("{'error': Item not Deleted}", status=304, mimetype= 'application/json')
+    
+    return response
