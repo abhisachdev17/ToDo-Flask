@@ -41,4 +41,40 @@ def add_item(item, status):
     except Exception as e:
         print(e)
         return None
+
+def get_all_items():
+    try:
+        conn = db_connect()
+        c= conn.cursor()
+
+        c.execute('select * from items')
+        items = c.fetchall()
+        return {"items":items}
+    except Exception as e:
+        print(e)
+        return {}
+
+def get_item(key):
+    try:
+        c = db_connect().cursor()
+
+        c.execute("select * from items where id='{0}'".format(key))
+        item = c.fetchall()[0]
+
+        return item
+    except Exception as e:
+        print(e)
+
+        return None
     
+def update_item(key, status):
+    try:
+        conn = db_connect()
+        c = conn.cursor()
+
+        c.execute('update items set status=? where id=?', (status, key))
+        conn.commit()
+        return {'key': key, 'status': status}
+    except Exception as e:
+        print(e)
+        return None
