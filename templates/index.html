@@ -74,11 +74,11 @@
               data-status = "{{ todo.status }}">
               {% if todo.status == 'completed' %}
               <script>
-                // var elem = document.querySelector(`#{{ todo.key }} .toggle`)
                 var theId = `{{ todo.key }}`;
                 var item = document.querySelector(`#${CSS.escape(theId)}`);
                 item.classList.toggle("completed");
-                // elem.checked = true
+                var elem = document.querySelector(`#${CSS.escape(theId)} .toggle`)
+                elem.checked = true
               </script>
               {% endif %}
               <label>{{ todo.item }}</label>
