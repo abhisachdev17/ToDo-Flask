@@ -1,0 +1,95 @@
+<html>
+    <script>
+        // function that makes API call to add an item
+        function addItem(e) {
+          // if enter key is pressed on the form input, add new item
+          if (e.which == 13 || e.keyCode == 13) {
+            var item = document.querySelector('.new-todo');
+            fetch('/item/add', {
+              method: 'post',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ 
+                'item': item.value
+              })
+            })
+            .then(resp => {
+              // empty form input once a response is received
+              item.value = ""
+            });
+          }
+        }
+
+        // function that makes API call to remove an item
+        function removeItem(id) {
+            fetch('/item/delete', {
+              method: 'delete',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ 
+                'key': id
+              })
+            })
+        }
+
+        // function that makes API call to update an item 
+        // toggles the state of the item between complete and
+        // incomplete states
+        function toggleComplete(elem) {
+          var id = elem.dataset.id,
+              status = elem.dataset.status == "completed" ? "to do": "completed";
+          fetch('/item/update', {
+            method: 'put',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 
+                'key': id,
+                'status': status 
+            })
+          });
+        }
+      </script>
+    <head>
+      <link rel="stylesheet" href="/static/todo.css">
+      <title>ToDo WebApp</title>
+    </head>
+
+    <body>
+      <section class="todoapp">
+        <header class="header">
+          <h1>Todos</h1>
+          <input class="new-todo" placeholder="What needs to be done?" 
+            autofocus="" onkeypress="addItem(event)">
+        </header>
+
+        <section class="main">
+          <ul class="todo-list">
+          {% for todo in todos %}
+          <li id= "{{ todo.key }}">
+            <div class="view">
+              <input class="toggle" type="checkbox" onclick="toggleComplete(this)" data-id= "{{ todo.key }}" 
+              data-status = "{{ todo.status }}">
+              {% if todo.status == 'completed' %}
+              <script>
+                // var elem = document.querySelector(`#{{ todo.key }} .toggle`)
+                var theId = `{{ todo.key }}`;
+                var item = document.querySelector(`#${CSS.escape(theId)}`);
+                item.classList.toggle("completed");
+                // elem.checked = true
+              </script>
+              {% endif %}
+              <label>{{ todo.item }}</label>
+              <button class="destroy" onclick="removeItem('{{ todo.key }}')"></button>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+        </section>
+
+        <footer class="footer"></footer>  
+      </section>
+    </body>
+</html>

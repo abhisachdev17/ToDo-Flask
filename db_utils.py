@@ -49,7 +49,13 @@ def get_all_items():
 
         c.execute('select * from items')
         items = c.fetchall()
-        return {"items":items}
+        
+        to_add = []
+
+        for i in items:
+            to_add.append({'key': i[0], 'item': i[1], 'status': i[2]})
+
+        return {"items":to_add}
     except Exception as e:
         print(e)
         return {}
@@ -59,9 +65,9 @@ def get_item(key):
         c = db_connect().cursor()
 
         c.execute("select * from items where id='{0}'".format(key))
-        item = c.fetchall()[0]
+        i = c.fetchall()[0]
 
-        return item
+        return {'key': i[0], 'item': i[1], 'status': i[2]}
     except Exception as e:
         print(e)
 

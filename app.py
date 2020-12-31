@@ -12,7 +12,8 @@ db_utils.db_init()
 # the first route you will visit
 @app.route('/')
 def index():
-    return 'Hello World!'
+    items = get_all_ToDos()['items']
+    return render_template('index.html', todos= items)
 
 # the endpoint to add the items
 @app.route('/item/add', methods= ['POST'])
